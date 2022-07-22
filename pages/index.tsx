@@ -1,86 +1,137 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
+import type { NextPage } from "next";
+import Head from "next/head";
+import Image from "next/image";
+import Header from "../components/header";
+import Latest from "../components/latest";
+import { cardProps } from "../components/CompanyCard";
+import FeaturedCompany from "../components/FeaturedCompany";
+import Footy from "../components/Footer";
 
-const Home: NextPage = () => {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://nextjs.org">
-            Next.js!
-          </a>
-        </h1>
-
-        <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="rounded-md bg-gray-100 p-3 font-mono text-lg">
-            pages/index.tsx
-          </code>
-        </p>
-
-        <div className="mt-6 flex max-w-4xl flex-wrap items-center justify-around sm:w-full">
-          <a
-            href="https://nextjs.org/docs"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and its API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Learn &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Learn about Next.js in an interactive course with quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Examples &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Discover and deploy boilerplate example Next.js projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className="flex h-24 w-full items-center justify-center border-t">
-        <a
-          className="flex items-center justify-center gap-2"
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-        </a>
-      </footer>
-    </div>
-  )
+export async function getServerSideProps() {
+  return {
+    props: {
+      latestJobs: [
+        {
+          logoSrc:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Tesla_T_symbol.svg/800px-Tesla_T_symbol.svg.png",
+          companyName: "Tesla",
+          jobtitle: "Software Engineer",
+          jobdesc:
+            "Front-end develloper for our cool screens in the cars, awesome job, big-pay Front-end develloper for our cool screens in the cars, awesome job, big-pay Front-end develloper for our cool screens in the cars, awesome job, big-pay Front-end develloper for our cool screens in the cars, awesome job, big-pay",
+          url: "/Tesla",
+          tags: [],
+        },
+        {
+          logoSrc: "https://cdn-icons-png.flaticon.com/512/732/732221.png",
+          companyName: "Microsoft",
+          jobtitle: "Software Engineer",
+          jobdesc:
+            "Front-end develloper for our cool screens in the cars, awesome job, big-pay",
+          url: "/Tesla",
+          tags: [],
+        },
+        {
+          logoSrc:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/2048px-Google_%22G%22_Logo.svg.png",
+          companyName: "Google",
+          jobtitle: "Software Engineer",
+          jobdesc:
+            "Front-end develloper for our cool screens in the cars, awesome job, big-pay",
+          url: "/Tesla",
+          tags: [],
+        },
+        {
+          logoSrc:
+            "https://cdn.sstatic.net/Sites/stackoverflow/Img/apple-touch-icon.png?v=c78bd457575a",
+          companyName: "Stack Overflow",
+          jobtitle: "Software Engineer",
+          jobdesc:
+            "Front-end develloper for our cool screens in the cars, awesome job, big-pay",
+          url: "/Tesla",
+          tags: [],
+        },
+        {
+          logoSrc:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Tesla_T_symbol.svg/800px-Tesla_T_symbol.svg.png",
+          companyName: "Tesla",
+          jobtitle: "Software Engineer",
+          jobdesc:
+            "Front-end develloper for our cool screens in the cars, awesome job, big-pay",
+          url: "/Tesla",
+          tags: [],
+        },
+        {
+          logoSrc:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/2048px-Google_%22G%22_Logo.svg.png",
+          companyName: "Google",
+          jobtitle: "Software Engineer",
+          jobdesc:
+            "Front-end develloper for our cool screens in the cars, awesome job, big-pay",
+          url: "/Tesla",
+          tags: [],
+        },
+        {
+          logoSrc:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Tesla_T_symbol.svg/800px-Tesla_T_symbol.svg.png",
+          companyName: "Tesla",
+          jobtitle: "Software Engineer",
+          jobdesc:
+            "Front-end develloper for our cool screens in the cars, awesome job, big-pay",
+          url: "/Tesla",
+          tags: [],
+        },
+      ],
+    },
+  };
 }
 
-export default Home
+export default function Home({ latestJobs }: { latestJobs: cardProps[] }) {
+  // logoSrc: string;
+  // companyName: string;
+  // jobtitle: string;
+  // url: string;
+
+  return (
+    <div className="min-h-screen bg-slate-50  bg-gradient-to-br">
+      <Head>
+        <title>Engineer Hub</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <div className="z-10">
+        <Header />
+      </div>
+      <main className="z-0 p-5">
+        <div className="px-5 py-5">
+          <Latest allCards={latestJobs} title="Latest" />
+        </div>
+        <div className="px-5 py-5">
+          <Latest allCards={latestJobs.slice().reverse()} title="For You" />
+        </div>
+        <div className="px-5 pt-5">
+          <h2 className="text-2xl">Featured Companies</h2>
+          <div className="grid grid-cols-1 gap-10  pt-5  lg:grid-cols-2">
+            <FeaturedCompany
+              logoSrc={latestJobs[0].logoSrc}
+              companyName={latestJobs[0].companyName}
+              companyDescription={
+                "Tesla is a company which specialise in the electric automotive business. Making breakthroughs this year with autonomous driving. This would be GPT-3'd"
+              }
+              positionsAvailable={7}
+              url={latestJobs[0].url}
+            />
+            <FeaturedCompany
+              logoSrc={latestJobs[1].logoSrc}
+              companyName={latestJobs[1].companyName}
+              companyDescription={
+                "Microsoft company description, this would be GPT-3'd"
+              }
+              positionsAvailable={203}
+              url={latestJobs[1].url}
+            />
+          </div>
+        </div>
+      </main>
+      <Footy />
+    </div>
+  );
+}
