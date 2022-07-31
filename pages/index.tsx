@@ -60,9 +60,9 @@ export const useIsMount = () => {
 
 const prisma = new PrismaClient();
 
-export async function getServerSideProps<GetServerSideProps>(context) {
-  const { params, req, res } = context;
-  // context.
+export async function getServerSideProps<GetServerSideProps>() {
+  // const { params, req, res } = context;
+  // // context.
 
   var jobs = await prisma.job.findMany({
     select: {
