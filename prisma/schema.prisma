@@ -1,0 +1,40 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model Website {
+  id              Int    @id @default(autoincrement())
+  name            String
+  careersPageLink String @unique
+  icon            String
+  jobs            Job[]
+}
+
+model Job {
+  id           Int      @id @default(autoincrement())
+  url          String   @unique
+  title        String
+  remote       Boolean
+  country      String
+  city         String
+  seniority    String
+  firstScraped DateTime @default(now())
+  lastScraped  DateTime @updatedAt
+  techs        Tech[]
+  Website      Website? @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  websiteId    Int?
+}
+
+model Tech {
+  id    Int    @id @default(autoincrement())
+  tech  String
+  Job   Job?   @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  jobId Int?
+}
