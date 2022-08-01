@@ -2,8 +2,9 @@
 import { PrismaClient } from "@prisma/client";
 
 import type { NextApiRequest, NextApiResponse } from "next";
+import { Filter } from "..";
 
-type In = { results: Number };
+type In = { filter: Filter };
 
 type Data = {
   dataFrame: dataFrame | null;
@@ -52,73 +53,133 @@ export default async function handler(
 }
 
 async function getLatest(req: NextApiRequest, res: NextApiResponse) {
-  try {
-    var jobs = await prisma.job.findMany({
+  const filter = JSON.parse(req.body);
+  console.log(filter);
+  if (
+    filter.tech !== undefined ||
+    filter.seniority !== undefined ||
+    filter.remote !== undefined
+  ) {
+    try {
+      var jobs;
+      if (filter.tech === undefined || filter.tech.length === 0) {
+        console.log(1);
+        jobs = await prisma.job.findMany({
+          select: {
+            url: true,
+            title: true,
+            remote: true,
+            country: true,
+            city: true,
+            seniority: true,
+            techs: { select: { tech: true } },
+            Website: { select: { id: true, name: true, icon: true } },
+          },
+          where: {
+            remote: filter.remote,
+            seniority: {
+              equals: filter.seniority,
+            },
+          },
+        });
+      } else {
+        console.log(2);
+        jobs = await prisma.job.findMany({
+          take: 100,
+          select: {
+            url: true,
+            title: true,
+            remote: true,
+            country: true,
+            city: true,
+            seniority: true,
+            techs: { select: { tech: true } },
+            Website: { select: { id: true, name: true, icon: true } },
+          },
+          where: {
+            remote: filter.remote,
+            seniority: {
+              equals: filter.seniority,
+            },
+            // search to only return jobs which contain all of the techs in filter.tech and possibly more
+            techs: {
+              some: {
+                tech: {
+                  in: filter.tech,
+                },
+              },
+            },
+          },
+        });
+      }
+
+      const end: toClient[] = [];
+
+      jobs.forEach((job) => {
+        if (job.Website) {
+          end.push({
+            id: job.Website.id,
+            name: job.Website.name,
+            url: job.url,
+            title: job.title,
+            country: job.country,
+            city: job.city,
+            seniority: job.seniority,
+            remote: job.remote,
+            techs: job.techs.map((tech) => tech.tech),
+            image:
+              "https://careers-pages.s3.us-east-2.amazonaws.com/" +
+              job.Website.icon,
+          });
+        }
+      });
+      return res
+        .status(200)
+        .json({ dataFrame: end, message: "Done", success: true });
+    } catch (error) {
+      console.log("Request error", error);
+      res
+        .status(500)
+        .json({ dataFrame: {}, message: "Request Error", success: false });
+    }
+  } else {
+    jobs = await prisma.job.findMany({
       select: {
-        id: true,
         url: true,
         title: true,
         remote: true,
         country: true,
         city: true,
         seniority: true,
-        firstScraped: true,
-        lastScraped: true,
-        websiteId: true,
+        techs: { select: { tech: true } },
+        Website: { select: { id: true, name: true, icon: true } },
       },
-      distinct: ["websiteId"],
-      take: 5,
+      take: 100,
     });
 
-    var final: toClient[];
-    jobs.forEach(async (job) => {
-      const website = await prisma.website.findUnique({
-        select: {
-          name: true,
-          icon: true,
-        },
-        where: {
-          id: job.websiteId == null ? undefined : job.websiteId,
-        },
-      });
+    const end: toClient[] = [];
 
-      const techObjects = await prisma.tech.findMany({
-        select: {
-          tech: true,
-        },
-        where: {
-          jobId: job.id,
-        },
-      });
-      const techList: string[] = techObjects.map((tech) => {
-        console.log(tech.tech);
-        return tech.tech;
-      });
-
-      final = [
-        ...final,
-        {
-          id: job.websiteId == null ? undefined : job.websiteId,
+    jobs.forEach((job) => {
+      if (job.Website) {
+        end.push({
+          id: job.Website.id,
+          name: job.Website.name,
           url: job.url,
-          name: website?.name,
           title: job.title,
           country: job.country,
           city: job.city,
           seniority: job.seniority,
           remote: job.remote,
-          techs: techList,
-          image: website?.icon,
-        },
-      ];
+          techs: job.techs.map((tech) => tech.tech),
+          image:
+            "https://careers-pages.s3.us-east-2.amazonaws.com/" +
+            job.Website.icon,
+        });
+      }
     });
 
     return res
       .status(200)
-      .json({ dataFrame: jobs, message: "Done", success: true });
-  } catch (error) {
-    console.log("Request error", error);
-    res
-      .status(500)
-      .json({ dataFrame: {}, message: "Request Error", success: false });
+      .json({ dataFrame: end, message: "Done", success: true });
   }
 }

@@ -3,11 +3,17 @@ import Head from "next/head";
 import Image from "next/image";
 import { GetServerSideProps, NextPageContext } from "next";
 import { useEffect, useRef, useState } from "react";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
 
 import { useRouter } from "next/router";
 import Header from "../components/header";
 import Job from "../components/job";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { FilterIcon } from "@heroicons/react/outline";
 
 export type toClient = {
   id: number;
@@ -58,81 +64,41 @@ export const useIsMount = () => {
   return isMountRef.current;
 };
 
-const prisma = new PrismaClient();
-
-export async function getServerSideProps<GetServerSideProps>() {
-  // const { params, req, res } = context;
-  // // context.
-
-  var jobs = await prisma.job.findMany({
-    select: {
-      url: true,
-      title: true,
-      remote: true,
-      country: true,
-      city: true,
-      seniority: true,
-      techs: { select: { tech: true } },
-      Website: { select: { id: true, name: true, icon: true } },
-    },
-  });
-
-  const end: toClient[] = [];
-
-  jobs.forEach((job) => {
-    if (job.Website) {
-      end.push({
-        id: job.Website.id,
-        name: job.Website.name,
-        url: job.url,
-        title: job.title,
-        country: job.country,
-        city: job.city,
-        seniority: job.seniority,
-        remote: job.remote,
-        techs: job.techs.map((tech) => tech.tech),
-        image:
-          "https://careers-pages.s3.us-east-2.amazonaws.com/" +
-          job.Website.icon,
-      });
-    }
-  });
-
-  return { props: { end } };
-}
-
 export interface IndexProps {
   end: toClient[];
 }
 
-type Filter = {
+export type Filter = {
   tech?: string[];
   seniority?: string;
   remote?: boolean;
   companyName?: string;
 };
 
-export default function Home(props: IndexProps) {
+export default function Home() {
   const router = useRouter();
-  //Helper Function to refresh the page
-  const refreshData = () => {
-    router.replace(router.asPath);
-  };
 
-  const [filter, setFilter] = useState<Filter>();
+  const [filter, setFilter] = useState<Filter>({});
   const [animationParent] = useAutoAnimate<HTMLDivElement>();
-  const [jobs, setJobs] = useState(props.end);
-  const isMount = useIsMount();
+  const [jobs, setJobs] = useState<toClient[]>([]);
+
+  async function fetchJobs(filter: Filter) {
+    const response = await fetch("/api/getLatest", {
+      method: "POST",
+      body: JSON.stringify(filter),
+    });
+    const data = response.json();
+    return data;
+  }
 
   useEffect(() => {
     // refresh get server side props, with the filter applied
     // then ensure that jobs are set to the result
-    if (isMount) {
-      //run on mount
-    } else {
-      //run on subsequent updates
-      console.log("FILTER CHANGE");
-    }
+
+    fetchJobs(filter).then((data) => {
+      setJobs(data.dataFrame);
+      console.log(data);
+    });
   }, [filter]);
 
   return (
@@ -145,14 +111,14 @@ export default function Home(props: IndexProps) {
           content="TechHired.io - Search for programming jobs without hassle."
         />
       </Head>
-      <Header />
+      <Header filter={filter} filterSetter={setFilter} />
       <main
         ref={animationParent}
         className="z-0 mx-[1%] mt-24 grid grid-cols-1 gap-5 p-10 2xl:grid-cols-2"
       >
         {jobs.map((job: toClient, index) => {
           return (
-            <div key={index}>
+            <div key={index + job.id}>
               <Job {...job} />
             </div>
           );

@@ -49,7 +49,11 @@ function job(jobProps: toClient) {
           <div className="flex flex-wrap justify-center gap-2 lg:justify-start">
             <PillSeniority seniority={jobProps.seniority} />
             {jobProps.techs.slice(0, 4).map((tech, index) => {
-              return <PillTech techName={tech} active={true} key={index} />;
+              return (
+                <div key={index}>
+                  <PillTech techName={tech} active={true} />
+                </div>
+              );
             })}
             {jobProps.techs.length > 4 && (
               <AdditionalPill

@@ -2,39 +2,111 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { MenuIcon, SearchIcon } from "@heroicons/react/outline";
 import Link from "next/link";
 import Image from "next/image";
+import { Filter, useIsMount } from "../pages";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
-function header() {
+interface Props {
+  filter: Filter;
+  filterSetter: Dispatch<SetStateAction<Filter>>;
+}
+
+function header(props: Props) {
   const [toggled, setToggled] = useState<boolean>(false);
   const languageList = [
-    "Python",
-    "Ruby",
+    "JavaScript",
+    "TypeScript",
     "HTML",
-    "CSS",
-    "Tailwind CSS",
-    "Java",
     "Haskell",
+    "React Native",
+    "React",
+    "Gatsby",
+    "Svelte",
+    "jQuery",
+    "Flutter",
+    "Express",
+    "Angular",
+    "Vue",
+    "Nuxt",
+    "Java",
+    ".NET Core",
+    ".NET Framework",
+    "Prisma",
+    "AWS",
+    "Google Cloud",
+    "Microsoft Azure",
+    "DigitalOcean",
+    "Heroku",
+    "Redis",
+    "MongoDB",
+    "Elixir",
+    "Docker",
+    "Laravel",
+    "Kubernetes",
+    "Ruby",
+    "Firebase",
+    "Node",
+    "Webpack",
+    "Scala",
+    "Golang",
+    "PHP",
+    "Objective-C",
+    "Delphi",
+    "Perl",
+    "Dart",
+    "Swift",
+    "C#",
+    "Rust",
+    "Redux",
+    "Babel",
+    "Tailwind",
+    "NextJS",
+    "Kotlin",
+    "C++",
+    "SASS",
+    "Django",
+    "TensorFlow",
+    "Python",
   ];
-  const jobTypeList = [
-    "Front-end",
-    "Back-End",
-    "Full-Stack",
-    "Remote",
-    "In-Office",
-  ];
+  const radioSeniorityList = ["Junior", "Senior", "Staff"];
+
+  const isSubstringOf = (superstring: string, substring: string) => {
+    return superstring.toUpperCase().indexOf(substring.toUpperCase()) !== -1;
+  };
+
   const toggleTerm = (term: string) => {
-    if (searchTerms.includes(term)) {
+    if (searchTerms !== undefined && searchTerms.includes(term)) {
       setSearchTerms(
         searchTerms.filter((value) => {
           return value != term;
         })
       );
     } else {
-      setSearchTerms([...searchTerms, term]);
+      if (searchTerms !== undefined) {
+        setSearchTerms([...searchTerms, term]);
+      } else {
+        setSearchTerms([term]);
+      }
     }
   };
 
+  const [animationParent] = useAutoAnimate<HTMLDivElement>();
+
   const [searchBarValue, setSearchBarValue] = useState<string>("");
-  const [searchTerms, setSearchTerms] = useState<string[]>([]);
+  const [searchTerms, setSearchTerms] = useState<string[] | undefined>(
+    undefined
+  );
+  const [searchSeniority, setSearchSeniority] = useState<string | undefined>(
+    undefined
+  );
+  const [remoteSet, setRemoteSet] = useState<boolean | undefined>(undefined);
+
+  useEffect(() => {
+    props.filterSetter({
+      seniority: searchSeniority,
+      remote: remoteSet,
+      tech: searchTerms,
+    });
+  }, [searchTerms, searchSeniority, remoteSet]);
 
   return (
     <div className="fixed top-0 z-20 w-full">
@@ -112,18 +184,22 @@ function header() {
           >
             <SearchIcon className="absolute right-3 top-1/2 w-8 -translate-y-1/2" />
           </button>
-          {searchBarValue.length == 0 && (
-            <div
-              className="peer absolute top-14 right-1/2 z-30 hidden h-96 w-full translate-x-1/2 rounded-b-lg border border-t-0 border-gray-300 bg-gray-50 shadow transition-all focus-within:block hover:block focus:block peer-focus:block lg:w-[50vw]"
-              tabIndex={0}
-            >
-              <div className="grid grid-cols-2 lg:grid-cols-3">
-                <div className="p-1">
-                  <h2 className="text-center font-thin">
-                    Programming languages
-                  </h2>
-                  <ul className="flex flex-wrap justify-center gap-1 p-2">
-                    {languageList.map((language, index) => {
+
+          <div
+            className="peer absolute top-14 right-1/2 z-30 hidden h-min w-full translate-x-1/2 rounded-b-lg border border-t-0 border-gray-300 bg-gray-50 shadow transition-all focus-within:block hover:block focus:block peer-focus:block lg:w-[50vw]"
+            tabIndex={0}
+          >
+            <div className="grid grid-cols-2 p-4">
+              <div className="h-min rounded-lg p-2">
+                <h2 className=" text-center font-thin text-black">
+                  Programming languages
+                </h2>
+                <ul className="flex max-h-80 flex-wrap justify-center gap-1 overflow-y-auto p-2">
+                  {languageList.map((language, index) => {
+                    if (
+                      isSubstringOf(language, searchBarValue) ||
+                      searchBarValue === undefined
+                    ) {
                       return (
                         <li key={index} className="">
                           <button
@@ -131,6 +207,7 @@ function header() {
                               toggleTerm(language);
                             }}
                             className={`rounded-full border px-2 py-1   transition-colors ${
+                              searchTerms !== undefined &&
                               searchTerms.includes(language)
                                 ? "bg-blue-600 text-white"
                                 : "bg-white text-black"
@@ -140,20 +217,86 @@ function header() {
                           </button>
                         </li>
                       );
+                    }
+                  })}
+                </ul>
+              </div>
+              <div className="mt-4 h-min rounded-lg border-gray-300 bg-gray-200 p-2">
+                <div>
+                  <h2 className=" text-center font-thin text-black">
+                    Seniority
+                  </h2>
+                  <ul className="flex max-h-80 flex-wrap justify-center gap-1 overflow-y-auto p-2">
+                    {radioSeniorityList.map((radioSeniority, index) => {
+                      return (
+                        <li key={index} className="">
+                          <button
+                            onClick={() => {
+                              if (searchSeniority !== radioSeniority) {
+                                setSearchSeniority(radioSeniority);
+                              } else {
+                                setSearchSeniority(undefined);
+                              }
+                            }}
+                            className={`rounded-full border px-2 py-1   transition-colors ${
+                              searchSeniority == radioSeniority
+                                ? "bg-blue-600 text-white"
+                                : "bg-white text-black"
+                            }`}
+                          >
+                            {radioSeniority}
+                          </button>
+                        </li>
+                      );
                     })}
                   </ul>
                 </div>
-                <div className="p-1">
-                  <h2 className="text-center font-thin">Job Type</h2>
-                  <ul className="overflow-y-scroll"></ul>
-                </div>
-                <div className="col-span-2 p-1 lg:col-span-1">
-                  <h2 className="text-center font-thin">Other</h2>
-                  <ul className="overflow-y-scroll"></ul>
+                <div>
+                  <h2 className=" text-center font-thin text-black">
+                    Job Type
+                  </h2>
+                  <ul className="flex max-h-80 flex-wrap justify-center gap-1 overflow-y-auto p-2">
+                    <li>
+                      <button
+                        onClick={() => {
+                          if (remoteSet != true) {
+                            setRemoteSet(true);
+                          } else {
+                            setRemoteSet(undefined);
+                          }
+                        }}
+                        className={`rounded-full border px-2 py-1   transition-colors ${
+                          remoteSet == true
+                            ? "bg-blue-600 text-white"
+                            : "bg-white text-black"
+                        }`}
+                      >
+                        Remote
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => {
+                          if (remoteSet != false) {
+                            setRemoteSet(false);
+                          } else {
+                            setRemoteSet(undefined);
+                          }
+                        }}
+                        className={`rounded-full border px-2 py-1   transition-colors ${
+                          remoteSet == false && remoteSet != undefined
+                            ? "bg-blue-600 text-white"
+                            : "bg-white text-black"
+                        }`}
+                      >
+                        In person
+                      </button>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </nav>
     </div>

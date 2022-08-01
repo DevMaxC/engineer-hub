@@ -47,7 +47,7 @@ export default async function handler(
 }
 
 async function createJobs(id: number, jobs: Job[]) {
-  const myFinal = jobs.forEach(async (job: Job) => {
+  jobs.forEach(async (job: Job) => {
     try {
       const allNewJobs = await prisma.job.create({
         data: {
@@ -78,6 +78,11 @@ async function createWebsite(req: NextApiRequest, res: NextApiResponse) {
 
   if (req.body.secret == process.env.PYTHONSECRET) {
     try {
+      console.log(
+        fromPython.name,
+        fromPython.careersPageLink,
+        fromPython.image
+      );
       const newWebsite = await prisma.website.create({
         data: {
           name: fromPython.name,
