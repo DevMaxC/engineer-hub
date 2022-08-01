@@ -1,19 +1,13 @@
 import { PrismaClient } from "@prisma/client";
 import Head from "next/head";
 import Image from "next/image";
-import { GetServerSideProps, NextPageContext } from "next";
+
 import { useEffect, useRef, useState } from "react";
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from "@tanstack/react-query";
 
 import { useRouter } from "next/router";
 import Header from "../components/header";
 import Job from "../components/job";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { FilterIcon } from "@heroicons/react/outline";
 
 export type toClient = {
   id: number;
