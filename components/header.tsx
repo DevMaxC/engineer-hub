@@ -186,11 +186,11 @@ function header(props: Props) {
           </button>
 
           <div
-            className="peer absolute top-14 right-1/2 z-30 hidden h-min w-full translate-x-1/2 rounded-b-lg border border-t-0 border-gray-300 bg-gray-50 shadow transition-all focus-within:block hover:block focus:block peer-focus:block lg:w-[50vw]"
+            className="80 peer absolute top-14 right-1/2 z-30 hidden h-min w-[80vw] translate-x-1/2 rounded-b-lg border border-t-0 border-gray-300 bg-gray-50 shadow transition-all focus-within:block hover:block focus:block peer-focus:block lg:w-[50vw]"
             tabIndex={0}
           >
             <div className="grid grid-cols-2 p-4">
-              <div className="h-min rounded-lg p-2">
+              <div className=" col-span-2 h-min rounded-lg p-2 lg:col-span-1">
                 <h2 className=" text-center font-thin text-black">
                   Programming languages
                 </h2>
@@ -221,7 +221,7 @@ function header(props: Props) {
                   })}
                 </ul>
               </div>
-              <div className="mt-4 h-min rounded-lg border-gray-300 bg-gray-200 p-2">
+              <div className="col-span-2 mt-4 h-min rounded-lg border-gray-300 bg-gray-200 p-2 lg:col-span-1">
                 <div>
                   <h2 className=" text-center font-thin text-black">
                     Seniority
