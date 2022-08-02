@@ -6,6 +6,12 @@ export default function Custom404() {
       <h1 className="text-4xl font-bold">404 - Page Not found</h1>
       <h1 className="text-2xl font-thin">This website is under devellopment</h1>
       <h1 className="text-2xl  font-thin">we plan to add this soon :)</h1>
+      <a
+        className="mt-4 rounded-lg bg-white px-2 font-medium text-gray-800 hover:text-gray-600"
+        href="/"
+      >
+        Go Back
+      </a>
       <h1 className="mt-8 text-2xl  font-thin">For now - follow me on</h1>
       <h1 className="mt-2 text-2xl  font-thin">
         <a
