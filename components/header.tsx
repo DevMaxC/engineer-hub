@@ -194,7 +194,7 @@ function header(props: Props) {
                 <h2 className=" text-center font-thin text-black">
                   Programming languages
                 </h2>
-                <ul className="flex max-h-80 flex-wrap justify-center gap-1 overflow-y-auto p-2">
+                <ul className="flex max-h-40 flex-wrap justify-center gap-1 overflow-y-auto p-2 lg:max-h-80">
                   {languageList.map((language, index) => {
                     if (
                       isSubstringOf(language, searchBarValue) ||
