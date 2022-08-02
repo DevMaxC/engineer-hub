@@ -54,6 +54,7 @@ export default async function handler(
 
 async function getLatest(req: NextApiRequest, res: NextApiResponse) {
   const filter = JSON.parse(req.body);
+
   console.log(filter);
   if (
     filter.tech !== undefined ||
@@ -104,9 +105,7 @@ async function getLatest(req: NextApiRequest, res: NextApiResponse) {
             // search to only return jobs which contain all of the techs in filter.tech and possibly more
             techs: {
               some: {
-                tech: {
-                  in: filter.tech,
-                },
+                AND: filter.tech.map((t: string) => ({ tech: t })),
               },
             },
           },

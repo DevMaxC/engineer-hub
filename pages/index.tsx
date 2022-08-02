@@ -106,18 +106,20 @@ export default function Home() {
         />
       </Head>
       <Header filter={filter} filterSetter={setFilter} />
-      <main
-        ref={animationParent}
-        className="z-0 mx-[1%] mt-24 grid grid-cols-1 gap-5 p-10 2xl:grid-cols-2"
-      >
-        {jobs.map((job: toClient, index) => {
-          return (
-            <div key={index + job.id}>
-              <Job {...job} />
-            </div>
-          );
-        })}
-      </main>
+      <div className="mt-24 flex flex-col">
+        <main
+          ref={animationParent}
+          className="z-0 mx-[1%] grid grid-cols-1 gap-5 p-10 2xl:grid-cols-2"
+        >
+          {jobs.map((job: toClient, index) => {
+            return (
+              <div key={index + job.id}>
+                <Job {...job} />
+              </div>
+            );
+          })}
+        </main>
+      </div>
     </div>
   );
 }
