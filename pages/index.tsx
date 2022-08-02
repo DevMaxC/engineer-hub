@@ -104,6 +104,9 @@ export default function Home() {
           name="description"
           content="TechHired.io - Search for programming jobs without hassle."
         />
+        <meta property="og:image" content="/logoBlue.svg" />
+
+        <meta property="og:title" content="TechHired.io" />
       </Head>
       <Header filter={filter} filterSetter={setFilter} />
       <div className="mt-24 flex flex-col">
