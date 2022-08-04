@@ -84,15 +84,17 @@ export default function Home() {
     const data = response.json();
     return data;
   }
-
+  const [count, setCount] = useState(0);
   useEffect(() => {
     // refresh get server side props, with the filter applied
     // then ensure that jobs are set to the result
-
-    fetchJobs(filter).then((data) => {
-      setJobs(data.dataFrame);
-      console.log(data);
-    });
+    setCount(count + 1);
+    if (count > 0) {
+      fetchJobs(filter).then((data) => {
+        setJobs(data.dataFrame);
+        console.log(data);
+      });
+    }
   }, [filter]);
 
   return (
