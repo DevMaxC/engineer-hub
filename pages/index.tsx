@@ -106,9 +106,24 @@ export default function Home() {
           name="description"
           content="TechHired.io - Search for programming jobs without hassle."
         />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://techhired.io/" />
+        <meta property="og:title" content="TechHired.io" />
+        <meta
+          property="og:description"
+          content="TechHired.io - Search for programming jobs without hassle."
+        />
         <meta property="og:image" content="/logoBlue.svg" />
 
-        <meta property="og:title" content="TechHired.io" />
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://techhired.io/" />
+        <meta property="twitter:title" content="TechHired.io" />
+        <meta
+          property="twitter:description"
+          content="TechHired.io - Search for programming jobs without hassle."
+        />
+        <meta property="twitter:image" content="/logoBlue.svg" />
       </Head>
       <Header filter={filter} filterSetter={setFilter} />
       <div className="mt-24 flex flex-col">
