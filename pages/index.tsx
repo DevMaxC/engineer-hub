@@ -114,7 +114,7 @@ export default function Home() {
           property="og:description"
           content="TechHired.io - Search for programming jobs without hassle."
         />
-        <meta property="og:image" content="/logoBlue.svg" />
+        <meta property="og:image" content="/socialIcon.png" />
 
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content="https://techhired.io/" />
@@ -123,7 +123,7 @@ export default function Home() {
           property="twitter:description"
           content="TechHired.io - Search for programming jobs without hassle."
         />
-        <meta property="twitter:image" content="/logoBlue.svg" />
+        <meta property="twitter:image" content="/socialIcon.png" />
       </Head>
       <Header filter={filter} filterSetter={setFilter} />
       <div className="mt-24 flex flex-col">
