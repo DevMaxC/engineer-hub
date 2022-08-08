@@ -55,7 +55,6 @@ export default async function handler(
 async function getLatest(req: NextApiRequest, res: NextApiResponse) {
   const filter = JSON.parse(req.body);
 
-  console.log(filter);
   if (
     filter.tech !== undefined ||
     filter.seniority !== undefined ||
@@ -64,8 +63,8 @@ async function getLatest(req: NextApiRequest, res: NextApiResponse) {
     try {
       var jobs;
       if (filter.tech === undefined || filter.tech.length === 0) {
-        console.log(1);
         jobs = await prisma.job.findMany({
+          take: 100,
           select: {
             url: true,
             title: true,
@@ -84,7 +83,6 @@ async function getLatest(req: NextApiRequest, res: NextApiResponse) {
           },
         });
       } else {
-        console.log(2);
         jobs = await prisma.job.findMany({
           take: 100,
           select: {

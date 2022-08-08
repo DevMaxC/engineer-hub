@@ -118,6 +118,7 @@ function header(props: Props) {
             layout="fixed"
             height={64}
             width={64}
+            priority
             src="/logo.svg"
           ></Image>
         </div>
