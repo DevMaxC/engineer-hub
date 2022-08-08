@@ -110,7 +110,7 @@ function header(props: Props) {
 
   return (
     <div className="fixed top-0 z-20 w-full">
-      <div className="pointer-events-none absolute top-4 left-5 z-30 flex items-center align-middle font-extrabold text-white lg:my-auto xl:text-4xl">
+      <div className="pointer-events-none absolute top-4 left-5 z-30 flex items-center align-middle font-extrabold text-white xl:my-auto xl:text-4xl">
         <h1 className="hidden xl:block">TechHired</h1>
         <div className="h-16 w-16">
           <Image
@@ -126,7 +126,7 @@ function header(props: Props) {
         onClick={() => setToggled(!toggled)}
         aria-label={"Toggle menu"}
         className={
-          "fixed right-4 top-7 z-50 aspect-square w-10 border-none  transition" +
+          "fixed right-4 top-7 z-50 aspect-square w-10 border-none transition " +
           (toggled ? "rotate-90 text-blue-600" : "visible text-white")
         }
       >
@@ -141,9 +141,9 @@ function header(props: Props) {
       <div
         className={`${
           toggled ? "translate-x-0" : "translate-x-full"
-        } fixed top-0 right-0 z-40 h-screen w-screen bg-white text-white shadow-xl transition lg:w-1/4`}
+        } fixed top-0 right-0 z-40 h-screen w-screen bg-white text-white shadow-xl transition xl:w-1/4`}
       >
-        <div className="flex flex-col p-10 pt-24 text-center text-black lg:p-0 lg:pt-24">
+        <div className="flex flex-col p-10 pt-24 text-center text-black xl:p-0 xl:pt-24">
           <Link href={"/About"}>
             <a className="border p-4 text-2xl font-bold hover:bg-gray-100">
               About
@@ -186,15 +186,15 @@ function header(props: Props) {
           </button>
 
           <div
-            className="80 peer absolute top-14 right-1/2 z-30 hidden h-min w-[80vw] translate-x-1/2 rounded-b-lg border border-t-0 border-gray-300 bg-gray-50 shadow transition-all focus-within:block hover:block focus:block peer-focus:block lg:w-[50vw]"
+            className="80 peer absolute top-14 right-1/2 z-30 hidden h-min w-[80vw] translate-x-1/2 rounded-b-lg border border-t-0 border-gray-300 bg-gray-50 shadow transition-all focus-within:block hover:block focus:block peer-focus:block xl:w-[50vw]"
             tabIndex={0}
           >
             <div className="grid grid-cols-2 p-4">
-              <div className=" col-span-2 h-min rounded-lg p-2 lg:col-span-1">
+              <div className=" col-span-2 h-min rounded-lg p-2 xl:col-span-1">
                 <h2 className=" text-center font-thin text-black">
                   Programming languages
                 </h2>
-                <ul className="flex max-h-40 flex-wrap justify-center gap-1 overflow-y-auto p-2 lg:max-h-80">
+                <ul className="flex max-h-40 flex-wrap justify-center gap-1 overflow-y-auto p-2 xl:max-h-80">
                   {languageList.map((language, index) => {
                     if (
                       isSubstringOf(language, searchBarValue) ||
@@ -221,7 +221,7 @@ function header(props: Props) {
                   })}
                 </ul>
               </div>
-              <div className="col-span-2 mt-4 h-min rounded-lg border-gray-300 bg-gray-200 p-2 lg:col-span-1">
+              <div className="col-span-2 mt-4 h-min rounded-lg border-gray-300 bg-gray-200 p-2 xl:col-span-1">
                 <div>
                   <h2 className=" text-center font-thin text-black">
                     Seniority

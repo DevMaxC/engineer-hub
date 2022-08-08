@@ -34,19 +34,19 @@ function job(jobProps: toClient) {
         />
       </a>
       <a
-        className="z-0 flex w-full flex-col justify-between rounded-2xl border-2 border-gray-300 bg-gray-200 p-2 shadow-xl shadow-white transition hover:-translate-y-[1px] hover:scale-[1.001] hover:shadow-xl lg:flex-row lg:p-6 "
+        className="z-0 flex w-full flex-col justify-between rounded-2xl border-0 border-gray-300 bg-gray-200 p-2 shadow-white transition-all duration-300 ease-in-out hover:shadow-md xl:flex-row xl:p-6"
         href={jobProps.url}
         target="_blank"
       >
-        <div className="mx-7 flex h-full min-w-fit flex-col justify-center gap-4 lg:mx-0 lg:ml-10">
-          <div className="text-center text-lg text-gray-700 lg:text-left lg:text-2xl">
+        <div className="mx-7 flex h-full min-w-fit flex-col justify-center gap-2 xl:mx-0 xl:ml-10">
+          <div className="text-center text-lg text-gray-700 xl:text-left xl:text-xl">
             <h1>
               <span className="text-black">{jobProps.name}</span> -{" "}
               {maxChars(jobProps.title, 25)}
             </h1>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-2 lg:justify-start">
+          <div className="flex flex-wrap justify-center gap-2 xl:justify-start">
             <PillSeniority seniority={jobProps.seniority} />
             {jobProps.techs.slice(0, 4).map((tech, index) => {
               return (
@@ -63,12 +63,12 @@ function job(jobProps: toClient) {
             )}
           </div>
         </div>
-        <div className="mx-auto my-auto flex h-full flex-shrink-0 flex-row items-center justify-center gap-2 lg:mr-6 lg:ml-2 lg:flex-col lg:items-end lg:justify-center">
-          <h1 className="text-center text-lg text-gray-700 lg:text-right lg:text-2xl">
+        <div className="mx-auto my-auto flex h-full flex-shrink-0 flex-row items-center justify-center gap-2 xl:mr-6 xl:ml-2 xl:flex-col xl:items-end xl:justify-center">
+          <h1 className="text-center text-lg text-gray-700 xl:text-right xl:text-2xl">
             {jobProps.remote ? "Remote" : jobProps.city}
           </h1>
           {jobProps.country != "" && (
-            <h1 className="text-center text-lg text-gray-700 lg:text-right lg:text-2xl">
+            <h1 className="text-center text-lg text-gray-700 xl:text-right xl:text-2xl">
               {jobProps.country}
             </h1>
           )}

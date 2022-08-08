@@ -129,8 +129,14 @@ export default function Home() {
       <div className="mt-24 flex flex-col">
         <main
           ref={animationParent}
-          className="z-0 mx-[1%] grid grid-cols-1 gap-5 p-10 2xl:grid-cols-2"
+          className="z-0 mx-1 grid grid-cols-1 gap-5 p-10 xl:mx-[20%]"
         >
+          <div className="mx-auto w-max min-w-fit justify-end rounded-full bg-gray-200">
+            <h1 className="flex-nowrap px-3 py-2 text-lg">
+              Results {jobs.length}
+            </h1>
+          </div>
+
           {jobs.map((job: toClient, index) => {
             return (
               <div key={index + job.id}>

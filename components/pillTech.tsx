@@ -7,7 +7,7 @@ interface pillTechProps {
 
 function pillTech(props: pillTechProps) {
   return (
-    <div className="w-fit shrink-0 rounded-full border-2 bg-blue-600 py-1 px-2 align-middle text-sm text-white lg:text-xl">
+    <div className="w-fit shrink-0 rounded-full border-2 bg-blue-600 py-[2px] px-2 align-middle text-sm text-white lg:text-lg">
       {props.techName}
     </div>
   );
