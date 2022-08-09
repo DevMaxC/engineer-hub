@@ -5,4 +5,5 @@
 @font-face {
   font-family: "INTER";
   src: url("../public/fonts/INTER.ttf");
+  font-display: swap;
 }
