@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { MenuIcon, SearchIcon } from "@heroicons/react/outline";
 import Link from "next/link";
 import Image from "next/image";
-import { Filter, useIsMount } from "../pages";
+import { Filter } from "../pages";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 interface Props {
@@ -222,7 +222,7 @@ function header(props: Props) {
                   })}
                 </ul>
               </div>
-              <div className="col-span-2 mt-4 h-min rounded-lg border-gray-300 bg-gray-200 p-2 xl:col-span-1">
+              <div className="col-span-2 mt-4 flex h-min justify-evenly rounded-lg border-gray-300 bg-gray-200 p-2 xl:col-span-1">
                 <div>
                   <h2 className=" text-center font-thin text-black">
                     Seniority

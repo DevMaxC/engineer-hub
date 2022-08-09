@@ -50,14 +50,6 @@ export interface IndexProps {
   props: toClient[];
 }
 
-export const useIsMount = () => {
-  const isMountRef = useRef(true);
-  useEffect(() => {
-    isMountRef.current = false;
-  }, []);
-  return isMountRef.current;
-};
-
 export interface IndexProps {
   end: toClient[];
 }
@@ -69,17 +61,17 @@ export type Filter = {
   companyName?: string;
 };
 
-export async function fetchJobs(filter: Filter) {
+export async function fetchJobs(filter: Filter, skip: number, take: number) {
   const response = await fetch("http://techhired.io/api/getLatest", {
     method: "POST",
-    body: JSON.stringify(filter),
+    body: JSON.stringify({ filter, skip, take }),
   });
   const data = response.json();
   return data;
 }
 
 export async function getStaticProps() {
-  const props = await fetchJobs({});
+  const props = await fetchJobs({}, 0, 20);
   return {
     props: { props },
     revalidate: 10800,
@@ -88,6 +80,7 @@ export async function getStaticProps() {
 
 export default function Home({ props }: any) {
   const [loading, setLoading] = useState(false);
+  const [jobTotal, setJobTotal] = useState(0);
   const [filter, setFilter] = useState<Filter>({});
   const [animationParent] = useAutoAnimate<HTMLDivElement>();
   const [jobs, setJobs] = useState<toClient[]>(props.dataFrame);
@@ -98,7 +91,7 @@ export default function Home({ props }: any) {
     setCount(count + 1);
     if (count > 1) {
       setLoading(true);
-      fetchJobs(filter)
+      fetchJobs(filter, 0, 20)
         .then((data) => {
           setJobs(data.dataFrame);
         })
@@ -140,16 +133,16 @@ export default function Home({ props }: any) {
       <div className="mt-24 flex flex-col">
         <main
           ref={animationParent}
-          className="z-0 grid grid-cols-1 gap-5 p-10 xl:mx-[20%]"
+          className="z-0 flex flex-col items-center gap-5 p-10 xl:mx-[20%]"
         >
           {!loading ? (
-            <div className="pointer-events-none mx-auto h-min w-max min-w-fit justify-end rounded-full bg-gray-200">
-              <h1 className="flex-nowrap px-3 py-2 text-lg">
+            <div className="pointer-events-none h-10 w-fit rounded-full bg-gray-200">
+              <h1 className="min-w-8 flex-nowrap px-3 py-2 text-lg">
                 Results {jobs.length}
               </h1>
             </div>
           ) : (
-            <div className="pointer-events-none mx-auto" role="status">
+            <div className="pointer-events-none h-10" role="status">
               <svg
                 aria-hidden="true"
                 className="mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
@@ -172,11 +165,15 @@ export default function Home({ props }: any) {
 
           {jobs.map((job: toClient, index) => {
             return (
-              <div key={index + job.id}>
+              <div className="w-full" key={index + job.id}>
                 <Job {...job} />
               </div>
             );
           })}
+
+          <button className="w-fit rounded-full bg-blue-600 py-2 px-3 text-white transition hover:bg-blue-500 hover:shadow-md">
+            Load More Results
+          </button>
         </main>
       </div>
     </div>

@@ -34,7 +34,7 @@ function job(jobProps: toClient) {
         />
       </a>
       <a
-        className="z-0 flex w-full flex-col justify-between rounded-2xl border-0 border-gray-300 bg-gray-200 p-2 shadow-white transition-all duration-300 ease-in-out hover:shadow-md xl:flex-row xl:p-6"
+        className="z-0 flex w-full flex-col justify-between rounded-2xl bg-gray-300/60 p-2 shadow-white transition-all duration-300 ease-in-out hover:bg-gray-300/40 xl:flex-row xl:p-6"
         href={jobProps.url}
         target="_blank"
       >

@@ -53,7 +53,10 @@ export default async function handler(
 }
 
 async function getLatest(req: NextApiRequest, res: NextApiResponse) {
-  const filter = JSON.parse(req.body);
+  const body = JSON.parse(req.body);
+  const filter = body.filter;
+  const skip = body.skip;
+  const take = body.take;
 
   if (
     filter.tech !== undefined ||
@@ -64,7 +67,8 @@ async function getLatest(req: NextApiRequest, res: NextApiResponse) {
       var jobs;
       if (filter.tech === undefined || filter.tech.length === 0) {
         jobs = await prisma.job.findMany({
-          take: 100,
+          skip: skip,
+          take: take,
           select: {
             url: true,
             title: true,
@@ -84,7 +88,8 @@ async function getLatest(req: NextApiRequest, res: NextApiResponse) {
         });
       } else {
         jobs = await prisma.job.findMany({
-          take: 100,
+          skip: skip,
+          take: take,
           select: {
             url: true,
             title: true,
@@ -141,6 +146,7 @@ async function getLatest(req: NextApiRequest, res: NextApiResponse) {
     }
   } else {
     jobs = await prisma.job.findMany({
+      skip: skip,
       select: {
         url: true,
         title: true,
@@ -151,7 +157,7 @@ async function getLatest(req: NextApiRequest, res: NextApiResponse) {
         techs: { select: { tech: true } },
         Website: { select: { id: true, name: true, icon: true } },
       },
-      take: 100,
+      take: take,
     });
 
     const end: toClient[] = [];
