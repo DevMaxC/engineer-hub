@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import Head from "next/head";
 import Image from "next/image";
 
-import { useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 
 import { useRouter } from "next/router";
 import Header from "../components/header";
@@ -70,8 +70,34 @@ export async function fetchJobs(filter: Filter, skip: number, take: number) {
   return data;
 }
 
+export function useOnScreen(
+  ref: RefObject<HTMLElement>,
+  triggers: Array<any> = [] // Add triggers
+) {
+  const [isOnScreen, setIsOnScreen] = useState(false);
+  const observerRef = useRef<IntersectionObserver>();
+
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver(([entry]) =>
+      setIsOnScreen(entry.isIntersecting)
+    );
+  }, []);
+
+  useEffect(() => {
+    if (!!observerRef.current && !!ref.current) {
+      observerRef.current.observe(ref.current);
+
+      return () => {
+        observerRef.current!.disconnect();
+      };
+    }
+  }, [ref, ...triggers]); // Let the triggers fire the effect too on changes
+
+  return isOnScreen;
+}
+
 export async function getStaticProps() {
-  const props = await fetchJobs({}, 0, 20);
+  const props = await fetchJobs({}, 0, 10);
   return {
     props: { props },
     revalidate: 10800,
@@ -80,26 +106,62 @@ export async function getStaticProps() {
 
 export default function Home({ props }: any) {
   const [loading, setLoading] = useState(false);
-  const [jobTotal, setJobTotal] = useState(0);
+
+  const [unloadable, setUnloadable] = useState(false);
+  const lastJobRef = useRef<HTMLDivElement>(null);
+
   const [filter, setFilter] = useState<Filter>({});
   const [animationParent] = useAutoAnimate<HTMLDivElement>();
   const [jobs, setJobs] = useState<toClient[]>(props.dataFrame);
+
+  const isOnScreen = useOnScreen(lastJobRef, [jobs]);
+
   const [count, setCount] = useState(0);
+
   useEffect(() => {
     // refresh get server side props, with the filter applied
     // then ensure that jobs are set to the result
     setCount(count + 1);
     if (count > 1) {
       setLoading(true);
-      fetchJobs(filter, 0, 20)
+      fetchJobs(filter, 0, 10)
         .then((data) => {
           setJobs(data.dataFrame);
+          if (data.dataFrame.length < 10) {
+            setUnloadable(true);
+          } else {
+            setUnloadable(false);
+          }
         })
         .finally(() => {
           setLoading(false);
         });
     }
   }, [filter]);
+
+  //update the isOnScreen to the new element when the page is scrolled
+
+  useEffect(() => {
+    // if the user scrolls to the bottom of the page,
+    // fetch more jobs
+
+    if (isOnScreen && !unloadable) {
+      setLoading(true);
+      fetchJobs(filter, jobs.length, 10)
+        .then((data) => {
+          setJobs([...jobs, ...data.dataFrame]);
+          if (data.dataFrame.length < 10) {
+            setUnloadable(true);
+          } else {
+            setUnloadable(false);
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+          lastJobRef.current?.scrollIntoView({ behavior: "smooth" });
+        });
+    }
+  }, [isOnScreen]);
 
   return (
     <div className="min-h-screen overflow-hidden bg-gray-50 bg-gradient-to-br font-inter">
@@ -135,6 +197,18 @@ export default function Home({ props }: any) {
           ref={animationParent}
           className="z-0 flex flex-col items-center gap-5 p-10 xl:mx-[20%]"
         >
+          {jobs.map((job: toClient, index) => {
+            return (
+              <div
+                ref={index === jobs.length - 1 ? lastJobRef : undefined}
+                className="w-full"
+                key={index + job.id}
+              >
+                <Job {...job} />
+              </div>
+            );
+          })}
+
           {!loading ? (
             <div className="pointer-events-none h-10 w-fit rounded-full bg-gray-200">
               <h1 className="min-w-8 flex-nowrap px-3 py-2 text-lg">
@@ -162,18 +236,6 @@ export default function Home({ props }: any) {
               <span className="sr-only">Loading...</span>
             </div>
           )}
-
-          {jobs.map((job: toClient, index) => {
-            return (
-              <div className="w-full" key={index + job.id}>
-                <Job {...job} />
-              </div>
-            );
-          })}
-
-          <button className="w-fit rounded-full bg-blue-600 py-2 px-3 text-white transition hover:bg-blue-500 hover:shadow-md">
-            Load More Results
-          </button>
         </main>
       </div>
     </div>
