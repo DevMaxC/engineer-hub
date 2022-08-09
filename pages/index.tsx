@@ -96,8 +96,10 @@ export function useOnScreen(
   return isOnScreen;
 }
 
+const numberOfJobs = 10;
+
 export async function getStaticProps() {
-  const props = await fetchJobs({}, 0, 10);
+  const props = await fetchJobs({}, 0, numberOfJobs);
   return {
     props: { props },
     revalidate: 10800,
@@ -147,10 +149,10 @@ export default function Home({ props }: any) {
 
     if (isOnScreen && !unloadable) {
       setLoading(true);
-      fetchJobs(filter, jobs.length, 10)
+      fetchJobs(filter, jobs.length, numberOfJobs)
         .then((data) => {
           setJobs([...jobs, ...data.dataFrame]);
-          if (data.dataFrame.length < 10) {
+          if (data.dataFrame.length < numberOfJobs) {
             setUnloadable(true);
           } else {
             setUnloadable(false);
