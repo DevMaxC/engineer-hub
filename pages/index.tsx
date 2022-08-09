@@ -74,7 +74,7 @@ export async function getStaticProps() {
   const props = await fetchJobs({}, 0, 20);
   return {
     props: { props },
-    revalidate: 1,
+    revalidate: 10800,
   };
 }
 
