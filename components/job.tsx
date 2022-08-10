@@ -20,7 +20,7 @@ function job(jobProps: toClient) {
     <div className="relative ">
       <a
         href={"/company/" + jobProps.id}
-        className="absolute -top-3 -left-3 z-10 h-12 w-12 overflow-hidden rounded-full bg-white ring-blue-600 transition hover:scale-[1.01] hover:ring-2"
+        className="absolute -top-3 -left-3 z-10 h-12 w-12 overflow-hidden rounded-full bg-white ring-2 ring-blue-600/30 transition hover:scale-[1.01] hover:ring-blue-600"
         target="_blank"
         title={"All " + jobProps.name + " jobs"}
       >

@@ -3,7 +3,6 @@ import { MenuIcon, SearchIcon } from "@heroicons/react/outline";
 import Link from "next/link";
 import Image from "next/image";
 import { Filter } from "../pages";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 interface Props {
   filter: Filter;
@@ -89,8 +88,6 @@ function header(props: Props) {
     }
   };
 
-  const [animationParent] = useAutoAnimate<HTMLDivElement>();
-
   const [searchBarValue, setSearchBarValue] = useState<string>("");
   const [searchTerms, setSearchTerms] = useState<string[] | undefined>(
     undefined
@@ -145,6 +142,11 @@ function header(props: Props) {
         } fixed top-0 right-0 z-40 h-screen w-screen bg-white text-white shadow-xl transition xl:w-1/4`}
       >
         <div className="flex flex-col p-10 pt-24 text-center text-black xl:p-0 xl:pt-24">
+          <Link href={"/"}>
+            <a className="border p-4 text-2xl font-bold hover:bg-gray-100">
+              Home
+            </a>
+          </Link>
           <Link href={"/About"}>
             <a className="border p-4 text-2xl font-bold hover:bg-gray-100">
               About
@@ -158,6 +160,11 @@ function header(props: Props) {
           <Link href={"/Blog"}>
             <a className="border p-4 text-2xl font-bold hover:bg-gray-100">
               Blog
+            </a>
+          </Link>
+          <Link href={"/Changes"}>
+            <a className="border p-4 text-2xl font-bold hover:bg-gray-100">
+              Change Log
             </a>
           </Link>
           <Link href={"/Contact"}>

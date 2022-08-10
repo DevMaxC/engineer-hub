@@ -1,10 +1,7 @@
-import { PrismaClient } from "@prisma/client";
 import Head from "next/head";
-import Image from "next/image";
 
 import { RefObject, useEffect, useRef, useState } from "react";
 
-import { useRouter } from "next/router";
 import Header from "../components/header";
 import Job from "../components/job";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
@@ -22,36 +19,8 @@ export type toClient = {
   image: string;
 };
 
-const exampleJob: toClient = {
-  id: 12,
-  url: "https://www.lifeatspotify.com/jobs/frontend-engineer-reliability",
-  name: "Spotify",
-  title: "Frontend Engineer",
-  country: "United States",
-  city: "New York",
-  seniority: "Junior",
-  remote: true,
-  techs: [
-    "TypeScript",
-    "React",
-    "Next.js",
-    "Redux",
-    "GraphQL",
-    "Node.js",
-    "Express",
-    "MongoDB",
-    "PostgreSQL",
-  ],
-  image:
-    "https://careers-pages.s3.us-east-2.amazonaws.com/01822a79-4340-794a-88cb-1638d32c3585.png",
-};
-
 export interface IndexProps {
   props: toClient[];
-}
-
-export interface IndexProps {
-  end: toClient[];
 }
 
 export type Filter = {
@@ -62,7 +31,7 @@ export type Filter = {
 };
 
 export async function fetchJobs(filter: Filter, skip: number, take: number) {
-  const response = await fetch("https://techhired.io/api/getLatest", {
+  const response = await fetch("http://localhost:3000/api/getLatest", {
     method: "POST",
     body: JSON.stringify({ filter, skip, take }),
   });
@@ -96,7 +65,8 @@ export function useOnScreen(
   return isOnScreen;
 }
 
-const numberOfJobs = 10;
+// The number of jobs which will be rendered at one time, also increases how much randomness there is
+const numberOfJobs = 20;
 
 export async function getStaticProps() {
   const props = await fetchJobs({}, 0, numberOfJobs);
@@ -107,19 +77,31 @@ export async function getStaticProps() {
 }
 
 export default function Home({ props }: any) {
+  //Sets the loading spinner at the bottom of the page
   const [loading, setLoading] = useState(false);
 
+  //Unloadable is true when the server has exhausted all results, used to prevent flooding of requests
   const [unloadable, setUnloadable] = useState(false);
+
+  // The ref to the last job on the page
   const lastJobRef = useRef<HTMLDivElement>(null);
 
+  // The filter which is active on the page
   const [filter, setFilter] = useState<Filter>({});
+
+  // Autoanimate the jobs on the page
   const [animationParent] = useAutoAnimate<HTMLDivElement>();
+
+  // The list of jobs on the page
   const [jobs, setJobs] = useState<toClient[]>(props.dataFrame);
 
+  // The custom hook to detect if the last job is on screen
   const isOnScreen = useOnScreen(lastJobRef, [jobs]);
 
+  // A count to stop the use effect from pulling more data when the page loads
   const [count, setCount] = useState(0);
 
+  // Use effect to get new jobs when a filter is applied
   useEffect(() => {
     // refresh get server side props, with the filter applied
     // then ensure that jobs are set to the result
@@ -141,12 +123,8 @@ export default function Home({ props }: any) {
     }
   }, [filter]);
 
-  //update the isOnScreen to the new element when the page is scrolled
-
+  // Use effect to detect when the user is at the bottom of the page and if new results need to be loaded
   useEffect(() => {
-    // if the user scrolls to the bottom of the page,
-    // fetch more jobs
-
     if (isOnScreen && !unloadable) {
       setLoading(true);
       fetchJobs(filter, jobs.length, numberOfJobs)
@@ -172,7 +150,7 @@ export default function Home({ props }: any) {
         <link rel="icon" href="/logoBlue.svg" />
         <meta
           name="description"
-          content="TechHired.io - Search for programming jobs without hassle."
+          content="Using TechHired, you can search for hundreads of live software engineering jobs by stack, location, and more. It's free and designed for programmers."
         />
 
         <meta property="og:type" content="website" />
@@ -180,7 +158,7 @@ export default function Home({ props }: any) {
         <meta property="og:title" content="TechHired.io" />
         <meta
           property="og:description"
-          content="TechHired.io - Search for programming jobs without hassle."
+          content="Using TechHired, you can search for hundreads of live software engineering jobs by stack, location, and more. It's free and designed for programmers."
         />
         <meta property="og:image" content="/socialIcon.png" />
 
