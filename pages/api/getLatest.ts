@@ -133,7 +133,9 @@ async function getLatest(req: NextApiRequest, res: NextApiResponse) {
             // search to only return jobs which contain all of the techs in filter.tech and possibly more
             techs: {
               some: {
-                AND: filter.tech.map((t: string) => ({ tech: t })),
+                tech: {
+                  in: filter.tech,
+                },
               },
             },
           },
