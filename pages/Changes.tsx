@@ -47,6 +47,7 @@ function Changes() {
             "Tech pill boxes now show the techs that a company is looking for",
             "Logo of the company shows with each post",
           ]}
+          date="01/08/2022"
         />
         <ChangeSection
           version="1.01"
@@ -57,6 +58,18 @@ function Changes() {
             "Revamped job appearance",
             "Using static props to improve performance",
           ]}
+          date="07/08/2022"
+        />
+        <ChangeSection
+          version="1.02"
+          title="Site stats"
+          description="We can now see stats on how the site is performing. This will help us to improve the site and make it more user friendly"
+          bulletPoints={[
+            "Consent Manager",
+            "Mixpanel Integration",
+            "Easy Opt Out",
+          ]}
+          date="11/08/2022"
         />
       </div>
     </div>

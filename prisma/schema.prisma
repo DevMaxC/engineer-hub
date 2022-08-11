@@ -25,6 +25,7 @@ model Job {
   country      String
   city         String
   seniority    String
+  active       Boolean
   firstScraped DateTime @default(now())
   lastScraped  DateTime @updatedAt
   techs        Tech[]

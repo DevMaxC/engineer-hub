@@ -5,9 +5,13 @@ import { RefObject, useEffect, useRef, useState } from "react";
 import Header from "../components/header";
 import Job from "../components/job";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import mixpanel from "mixpanel-browser";
+import CookieConsent from "../components/cookieConsent";
+import { setCookie, getCookie } from "cookies-next";
 
 export type toClient = {
   id: number;
+  jobId: number;
   url: string;
   name: string;
   title: string;
@@ -72,13 +76,18 @@ export async function getStaticProps() {
   const props = await fetchJobs({}, 0, numberOfJobs);
   return {
     props: { props },
-    revalidate: 10800,
+    revalidate: 1,
   };
 }
 
 export default function Home({ props }: any) {
   //Sets the loading spinner at the bottom of the page
   const [loading, setLoading] = useState(false);
+
+  //Sets if cookies have been accepted
+
+  const [consent, setConsent] = useState<boolean | undefined>();
+  const [showCookieBox, setShowCookieBox] = useState(false);
 
   //Unloadable is true when the server has exhausted all results, used to prevent flooding of requests
   const [unloadable, setUnloadable] = useState(false);
@@ -101,12 +110,57 @@ export default function Home({ props }: any) {
   // A count to stop the use effect from pulling more data when the page loads
   const [count, setCount] = useState(0);
 
+  // Mixpanel init and usage
+
+  const mixpanelInit = () => {
+    if (consent) {
+      mixpanel.init("8cd8871241049e14fc2322cb8411b618" || "", {
+        ignore_dnt: true,
+      });
+      mixpanelTrack("Page Visit", filter.tech);
+    }
+  };
+
+  const mixpanelTrack = (event: string, data: any) => {
+    if (consent == true) {
+      mixpanel.track(event, data);
+    }
+  };
+
+  // Get the cookie consent and set the state
+  useEffect(() => {
+    if (getCookie("consentTechHired") === true) {
+      setConsent(true);
+    } else if (getCookie("consentTechHired") === false) {
+      setConsent(false);
+    } else {
+      setShowCookieBox(true);
+    }
+  }, []);
+
+  // Initialise mixpanel on consent given
+  useEffect(() => {
+    if (consent == true) {
+      mixpanelInit();
+      setCookie("consentTechHired", "true", {
+        maxAge: 365 * 24 * 60 * 60,
+      });
+      setShowCookieBox(false);
+    } else if (consent == false) {
+      setCookie("consentTechHired", "false", {
+        maxAge: 365 * 24 * 60 * 60,
+      });
+      setShowCookieBox(false);
+    }
+  }, [consent]);
+
   // Use effect to get new jobs when a filter is applied
   useEffect(() => {
     // refresh get server side props, with the filter applied
     // then ensure that jobs are set to the result
     setCount(count + 1);
     if (count > 1) {
+      mixpanelTrack("Filter Applied", filter.tech);
       setLoading(true);
       fetchJobs(filter, 0, 10)
         .then((data) => {
@@ -127,6 +181,7 @@ export default function Home({ props }: any) {
   useEffect(() => {
     if (isOnScreen && !unloadable) {
       setLoading(true);
+      mixpanelTrack("dynamic_load", {});
       fetchJobs(filter, jobs.length, numberOfJobs)
         .then((data) => {
           setJobs([...jobs, ...data.dataFrame]);
@@ -171,6 +226,7 @@ export default function Home({ props }: any) {
         />
         <meta property="twitter:image" content="/socialIcon.png" />
       </Head>
+
       <Header filter={filter} filterSetter={setFilter} />
       <div className="mt-24 flex flex-col">
         <main
@@ -182,7 +238,7 @@ export default function Home({ props }: any) {
               <div
                 ref={index === jobs.length - 1 ? lastJobRef : undefined}
                 className="w-full"
-                key={index + job.id}
+                key={job.jobId}
               >
                 <Job {...job} />
               </div>
@@ -218,6 +274,7 @@ export default function Home({ props }: any) {
           )}
         </main>
       </div>
+      {showCookieBox === true && <CookieConsent consentSetter={setConsent} />}
     </div>
   );
 }
