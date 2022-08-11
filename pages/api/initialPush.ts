@@ -57,6 +57,7 @@ async function createJobs(id: number, jobs: Job[]) {
           country: job.country,
           city: job.city,
           seniority: job.seniority,
+          active: true,
           techs: {
             createMany: {
               data: job.techs.map((tech) => ({
