@@ -222,9 +222,9 @@ async function getLatest(req: NextApiRequest, res: NextApiResponse) {
         });
       }
     });
-
     return res
       .status(200)
+      .setHeader("Cache-Control", "s-max-age=1800")
       .json({ dataFrame: shuffle(end), message: "Done", success: true });
   }
 }
