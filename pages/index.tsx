@@ -182,7 +182,7 @@ export default function Home({ props }: any) {
   useEffect(() => {
     if (isOnScreen && !unloadable) {
       setLoading(true);
-      mixpanelTrack("dynamic_load", {});
+      mixpanelTrack("dynamic_load", { numberOfJobs: numberOfJobs });
       fetchJobs(filter, jobs.length, numberOfJobs)
         .then((data) => {
           setJobs([...jobs, ...data.dataFrame]);
