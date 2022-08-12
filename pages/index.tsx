@@ -35,7 +35,7 @@ export type Filter = {
 };
 
 export async function fetchJobs(filter: Filter, skip: number, take: number) {
-  const response = await fetch("https://techhired.io/api/getLatest", {
+  const response = await fetch("http://localhost:3000/api/getLatest", {
     method: "POST",
     body: JSON.stringify({ filter, skip, take }),
   });
@@ -116,6 +116,7 @@ export default function Home({ props }: any) {
     if (consent) {
       mixpanel.init("8cd8871241049e14fc2322cb8411b618" || "", {
         ignore_dnt: true,
+        debug: false,
       });
       mixpanelTrack("Page Visit", filter.tech);
     }
@@ -239,6 +240,15 @@ export default function Home({ props }: any) {
                 ref={index === jobs.length - 1 ? lastJobRef : undefined}
                 className="w-full"
                 key={job.jobId}
+                onClick={() => {
+                  mixpanelTrack("Job Clicked", {
+                    jobId: job.jobId,
+                    jobTitle: job.title,
+                    jobCompany: job.name,
+                    jobRemote: job.remote,
+                    jobUrl: job.url,
+                  });
+                }}
               >
                 <Job {...job} />
               </div>
