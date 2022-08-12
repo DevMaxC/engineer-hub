@@ -195,6 +195,9 @@ async function getLatest(req: NextApiRequest, res: NextApiResponse) {
         techs: { select: { tech: true } },
         Website: { select: { id: true, name: true, icon: true } },
       },
+      where: {
+        active: true,
+      },
       take: take,
     });
 

@@ -71,6 +71,17 @@ function Changes() {
           ]}
           date="11/08/2022"
         />
+        <ChangeSection
+          version="1.1"
+          title="Auto Updating"
+          description="Jobs are now all live! If you see a job on the site its almost guarenteed to be an active job. Engineer Experience Done!"
+          bulletPoints={[
+            "Auto Updating Every 30 Minutes on average",
+            "External Python deployed on AWS",
+            "MVP ACHIEVED!",
+          ]}
+          date="12/08/2022"
+        />
       </div>
     </div>
   );
