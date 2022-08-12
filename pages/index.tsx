@@ -70,7 +70,7 @@ export function useOnScreen(
 }
 
 // The number of jobs which will be rendered at one time, also increases how much randomness there is
-const numberOfJobs = 20;
+const numberOfJobs = 10;
 
 export async function getStaticProps() {
   const props = await fetchJobs({}, 0, numberOfJobs);
