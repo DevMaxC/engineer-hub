@@ -110,6 +110,9 @@ async function getLatest(req: NextApiRequest, res: NextApiResponse) {
           },
         });
       } else {
+        //filter.tech : String[]
+        //filter.remote : Boolean
+        //filter.seniority : String
         jobs = await prisma.job.findMany({
           skip: skip,
           take: take,
@@ -130,14 +133,20 @@ async function getLatest(req: NextApiRequest, res: NextApiResponse) {
             seniority: {
               equals: filter.seniority,
             },
-            // search to only return jobs which contain all of the techs in filter.tech and possibly more
-            techs: {
-              some: {
-                tech: {
-                  in: filter.tech,
+            // search to only return jobs which contain all of the techs in filter.tech but it doesnt need to be totally equal
+            // for instance a search for ["TypeScript"] should return a job with ["TypeScript","React"]
+            // the user can also search for multiple queries like ["TypeScript","React"], in this case it should NOT return a job with only ["TypeScript"]
+            AND: filter.tech.map((t: string) => {
+              return {
+                techs: {
+                  some: {
+                    tech: {
+                      contains: t,
+                    },
+                  },
                 },
-              },
-            },
+              };
+            }),
           },
         });
       }

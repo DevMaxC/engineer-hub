@@ -12,6 +12,8 @@ interface Props {
 function header(props: Props) {
   const [toggled, setToggled] = useState<boolean>(false);
   const languageList = [
+    "Android",
+    "IOS",
     "JavaScript",
     "TypeScript",
     "HTML",
@@ -66,7 +68,13 @@ function header(props: Props) {
     "TensorFlow",
     "Python",
   ];
-  const radioSeniorityList = ["Junior", "Senior", "Staff"];
+  const radioSeniorityList = [
+    "Intern",
+    "Junior",
+    "Senior",
+    "Staff",
+    "Director",
+  ];
 
   const isSubstringOf = (superstring: string, substring: string) => {
     return superstring.toUpperCase().indexOf(substring.toUpperCase()) !== -1;
