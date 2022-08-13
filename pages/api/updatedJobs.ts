@@ -35,7 +35,7 @@ export default async function handler(
         const newJobs: Job[] = req.body.jobs;
         const websiteUrl = req.body.url;
 
-        await prisma.job.updateMany({
+        const updated = await prisma.job.updateMany({
           where: {
             AND: [
               { Website: { careersPageLink: websiteUrl } },
@@ -86,32 +86,35 @@ export default async function handler(
         if (website != null) {
           newJobs.forEach(async (job: Job) => {
             try {
-              prisma.job.count({
+              const count = await prisma.job.count({
                 where: {
                   AND: [{ url: job.url }, { Website: { id: website.id } }],
                 },
               });
+
+              if (count == 0) {
+                await prisma.job.create({
+                  data: {
+                    url: job.url,
+                    title: job.title,
+                    remote: job.remote,
+                    country: job.country,
+                    city: job.city,
+                    seniority: job.seniority,
+                    active: true,
+                    techs: {
+                      createMany: {
+                        data: job.techs.map((tech) => ({
+                          tech: tech,
+                        })),
+                      },
+                    },
+                    websiteId: website.id,
+                  },
+                });
+              }
             } catch (error) {
               console.log(error);
-              await prisma.job.create({
-                data: {
-                  url: job.url,
-                  title: job.title,
-                  remote: job.remote,
-                  country: job.country,
-                  city: job.city,
-                  seniority: job.seniority,
-                  active: true,
-                  techs: {
-                    createMany: {
-                      data: job.techs.map((tech) => ({
-                        tech: tech,
-                      })),
-                    },
-                  },
-                  websiteId: website.id,
-                },
-              });
             }
           });
           return res.status(200).json({ message: "Done", success: true });
