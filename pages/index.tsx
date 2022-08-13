@@ -36,11 +36,18 @@ export type Filter = {
 };
 
 export async function fetchJobs(filter: Filter, skip: number, take: number) {
+  console.log(
+    "FUNCTION INVOCATION IN INDEX.TSX: FETCH JOBS, LOGGING JSON.stringify({ filter, skip, take }:"
+  );
+  console.log(JSON.stringify({ filter, skip, take }));
+
   const response = await fetch("https://techhired.io/api/getLatest", {
     method: "POST",
     body: JSON.stringify({ filter, skip, take }),
   });
   const data = response.json();
+  console.log("RETURNING RESPONSE.JSON");
+  console.log(data);
   return data;
 }
 

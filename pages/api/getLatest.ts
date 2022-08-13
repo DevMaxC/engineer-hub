@@ -65,9 +65,12 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   if (req.method === "POST") {
+    console.log("------");
+    console.log("CONSOLE LOGGING IN POST REQUEST OF 'API/GETLATEST':");
+    console.log(req);
+    console.log("------");
     return await getLatest(req, res);
   } else {
-    console.log(req);
     return res
       .status(405)
       .json({ dataFrame: null, message: "Method not allowed", success: false });
