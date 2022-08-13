@@ -65,10 +65,6 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   if (req.method === "POST") {
-    console.log("------");
-    console.log("CONSOLE LOGGING IN POST REQUEST OF 'API/GETLATEST':");
-    console.log(req);
-    console.log("------");
     return await getLatest(req, res);
   } else {
     return res
@@ -91,6 +87,7 @@ async function getLatest(req: NextApiRequest, res: NextApiResponse) {
     try {
       var jobs;
       if (filter.tech === undefined || filter.tech.length === 0) {
+        console.log("PATH 1");
         jobs = await prisma.job.findMany({
           skip: skip,
           take: take,
@@ -117,6 +114,7 @@ async function getLatest(req: NextApiRequest, res: NextApiResponse) {
         //filter.tech : String[]
         //filter.remote : Boolean
         //filter.seniority : String
+        console.log("PATH 2");
         jobs = await prisma.job.findMany({
           skip: skip,
           take: take,
