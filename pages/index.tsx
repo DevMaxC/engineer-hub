@@ -115,7 +115,8 @@ export default function Home() {
   const [animationParent] = useAutoAnimate<HTMLDivElement>();
 
   // The list of jobs on the page
-  const [jobs, setJobs] = useState<toClient[]>(props.dataFrame);
+  const [jobs, setJobs] = useState<toClient[]>([]);
+  //props.dataFrame
 
   // The custom hook to detect if the last job is on screen
   const isOnScreen = useOnScreen(lastJobRef, [jobs]);
