@@ -83,15 +83,17 @@ export function useOnScreen(
 // The number of jobs which will be rendered at one time, also increases how much randomness there is
 const numberOfJobs = 10;
 
-export async function getStaticProps() {
-  const props = await fetchJobs({}, 0, numberOfJobs);
-  return {
-    props: { props },
-    revalidate: 8600,
-  };
-}
+// export async function getStaticProps() {
+//   const props = await fetchJobs({}, 0, numberOfJobs);
+//   return {
+//     props: { props },
+//     revalidate: 8600,
+//   };
+// }
 
-export default function Home({ props }: any) {
+// { props }: any
+
+export default function Home() {
   //Sets the loading spinner at the bottom of the page
   const [loading, setLoading] = useState(false);
 
