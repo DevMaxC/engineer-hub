@@ -41,14 +41,14 @@ export async function fetchJobs(filter: Filter, skip: number, take: number) {
   );
   console.log(JSON.stringify({ filter, skip, take }));
 
-  const response = await fetch("https://techhired.io/api/getLatest", {
+  const response = await fetch("http://localhost:3000/api/getLatest", {
     method: "POST",
     body: JSON.stringify({ filter, skip, take }),
   });
   const data = response.json();
   console.log("RETURNING RESPONSE.JSON");
   console.log(data);
-  return data;
+  return await data;
 }
 
 export function useOnScreen(
