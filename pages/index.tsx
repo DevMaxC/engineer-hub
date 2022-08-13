@@ -8,6 +8,7 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import mixpanel from "mixpanel-browser";
 import CookieConsent from "../components/cookieConsent";
 import { setCookie, getCookie } from "cookies-next";
+import { PrismaClient } from "@prisma/client";
 
 export type toClient = {
   id: number;
@@ -33,26 +34,6 @@ export type Filter = {
   remote?: boolean;
   companyName?: string;
 };
-
-export async function fetchJobs(filter: Filter, skip: number, take: number) {
-  console.log(
-    "FUNCTION INVOCATION IN INDEX.TSX: FETCH JOBS, LOGGING JSON.stringify({ filter, skip, take }:"
-  );
-  //console.log(JSON.stringify({ filter, skip, take }));
-
-  console.log(filter);
-  console.log(skip);
-  console.log(take);
-  console.log({ filter, skip, take });
-  const response = await fetch("https://techhired.io/api/getLatest", {
-    method: "POST",
-    body: JSON.stringify({ filter, skip, take }),
-  });
-  const data = response.json();
-  console.log("RETURNING RESPONSE.JSON");
-  //console.log(data);
-  return data;
-}
 
 export function useOnScreen(
   ref: RefObject<HTMLElement>,
@@ -80,20 +61,68 @@ export function useOnScreen(
   return isOnScreen;
 }
 
+export async function fetchJobs(filter: Filter, skip: number, take: number) {
+  const response = await fetch("http://localhost:3000/api/getLatest", {
+    method: "POST",
+    body: JSON.stringify({ filter, skip, take }),
+  });
+  const data = response.json();
+  return data;
+}
+
 // The number of jobs which will be rendered at one time, also increases how much randomness there is
 const numberOfJobs = 10;
 
-// export async function getStaticProps() {
-//   const props = await fetchJobs({}, 0, numberOfJobs);
-//   return {
-//     props: { props },
-//     revalidate: 8600,
-//   };
-// }
+export async function getStaticProps() {
+  const prisma = new PrismaClient();
 
-// { props }: any
+  const jobs = await prisma.job.findMany({
+    skip: 0,
+    select: {
+      url: true,
+      id: true,
+      title: true,
+      remote: true,
+      country: true,
+      city: true,
+      seniority: true,
+      techs: { select: { tech: true } },
+      Website: { select: { id: true, name: true, icon: true } },
+    },
+    where: {
+      active: true,
+    },
+    take: numberOfJobs,
+  });
 
-export default function Home() {
+  var end: toClient[] = [];
+
+  jobs.forEach((job) => {
+    if (job.Website) {
+      end.push({
+        id: job.Website.id,
+        jobId: job.id,
+        name: job.Website.name,
+        url: job.url,
+        title: job.title,
+        country: job.country,
+        city: job.city,
+        seniority: job.seniority,
+        remote: job.remote,
+        techs: job.techs.map((tech) => tech.tech),
+        image:
+          "https://careers-pages.s3.us-east-2.amazonaws.com/" +
+          job.Website.icon,
+      });
+    }
+  });
+  return {
+    props: { end },
+    revalidate: 1,
+  };
+}
+
+export default function Home({ end }: any) {
   //Sets the loading spinner at the bottom of the page
   const [loading, setLoading] = useState(false);
 
@@ -115,7 +144,7 @@ export default function Home() {
   const [animationParent] = useAutoAnimate<HTMLDivElement>();
 
   // The list of jobs on the page
-  const [jobs, setJobs] = useState<toClient[]>([]);
+  const [jobs, setJobs] = useState<toClient[]>(end);
   //props.dataFrame
 
   // The custom hook to detect if the last job is on screen
@@ -241,7 +270,6 @@ export default function Home() {
         />
         <meta property="twitter:image" content="/socialIcon.png" />
       </Head>
-
       <Header filter={filter} filterSetter={setFilter} />
       <div className="mt-24 flex flex-col">
         <main
