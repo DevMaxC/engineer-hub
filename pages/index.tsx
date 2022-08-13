@@ -62,7 +62,7 @@ export function useOnScreen(
 }
 
 export async function fetchJobs(filter: Filter, skip: number, take: number) {
-  const response = await fetch("http://localhost:3000/api/getLatest", {
+  const response = await fetch("https://techhired.io/api/getLatest", {
     method: "POST",
     body: JSON.stringify({ filter, skip, take }),
   });
