@@ -105,9 +105,7 @@ async function getLatest(req: NextApiRequest, res: NextApiResponse) {
           where: {
             active: true,
             remote: filter.remote,
-            seniority: {
-              equals: filter.seniority,
-            },
+            seniority: filter.seniority,
           },
         });
       } else {
