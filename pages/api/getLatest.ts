@@ -103,7 +103,7 @@ async function getLatest(req: NextApiRequest, res: NextApiResponse) {
             Website: { select: { id: true, name: true, icon: true } },
           },
           where: {
-            active: true,
+            //active: true,
             remote: filter.remote,
             seniority: filter.seniority,
           },
@@ -128,7 +128,7 @@ async function getLatest(req: NextApiRequest, res: NextApiResponse) {
             Website: { select: { id: true, name: true, icon: true } },
           },
           where: {
-            active: true,
+            //active: true,
             remote: filter.remote,
             seniority: {
               equals: filter.seniority,
@@ -197,7 +197,7 @@ async function getLatest(req: NextApiRequest, res: NextApiResponse) {
         Website: { select: { id: true, name: true, icon: true } },
       },
       where: {
-        active: true,
+        //active: true,
       },
       take: take,
     });
