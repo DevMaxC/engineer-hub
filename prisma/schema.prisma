@@ -5,7 +5,8 @@ generator client {
 
 datasource db {
   provider             = "mysql"
-  url                  = env("DATABASE_URL")
+  url                  = "mysql://k8eawnvaednw:pscale_pw_7eME6m4omyhQlK--IjRdtatU8DOju1FdlRTrxXZTsCY@kpqpywxujw9x.us-east-3.psdb.cloud/careers?sslaccept=strict"
+
   referentialIntegrity = "prisma"
 }
 

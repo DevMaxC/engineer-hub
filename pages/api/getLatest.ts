@@ -67,6 +67,7 @@ export default async function handler(
   if (req.method === "POST") {
     return await getLatest(req, res);
   } else {
+    console.log(req);
     return res
       .status(405)
       .json({ dataFrame: null, message: "Method not allowed", success: false });
