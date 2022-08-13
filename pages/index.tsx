@@ -9,6 +9,7 @@ import mixpanel from "mixpanel-browser";
 import CookieConsent from "../components/cookieConsent";
 import { setCookie, getCookie } from "cookies-next";
 
+//
 export type toClient = {
   id: number;
   jobId: number;
